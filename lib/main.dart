@@ -25,7 +25,6 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Kanit',
         scaffoldBackgroundColor: const Color(0xFFFFF0F5),
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: Colors.pink,
@@ -64,7 +63,7 @@ class MainApp extends StatelessWidget {
                     ),
                     child: const Center(
                       child: Text(
-                        'My Lovely App By VASINEE 💖',
+                        'My Lovely App / By VASINEE 💖',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 22,

@@ -22,12 +22,3 @@ flutter:
     - assets/images/
     - assets/icons/
 
-
-  fonts:
-    - family: Kanit
-      fonts:
-        - asset: assets/fonts/Kanit-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Kanit-Bold.ttf
-          weight: 700
-
