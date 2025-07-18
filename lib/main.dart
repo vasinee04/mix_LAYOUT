@@ -1,335 +1,231 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'gallery.dart';
+import 'product.dart';
 
-void main() {
-  runApp(const MainApp());
-}
+void main() => runApp(const MainApp());
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final imageList = <String>[
-      "assets/images/ui1.png",
-      "assets/images/ui2.png",
-      "assets/images/ui3.png",
-      "assets/images/ui4.png",
-      "assets/images/ui5.png",
-      "assets/images/ui6.png",
-      "assets/images/ui7.png",
-      "assets/images/ui8.png",
-      "assets/images/ui9.png",
-    ];
-
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      title: 'My Vasinee App 💖',
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFFFF0F5),
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: Colors.pink,
         ).copyWith(secondary: Colors.pinkAccent),
-        appBarTheme: const AppBarTheme(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.pinkAccent,
-        ),
+        fontFamily: 'ComicSans', // ถ้ามีฟอนต์น่ารัก เพิ่มได้ที่นี่
       ),
-      home: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              expandedHeight: 120,
-              floating: true,
-              pinned: true,
-              backgroundColor: Colors.transparent,
-              flexibleSpace: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.pinkAccent.withOpacity(0.3),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.pink.shade100.withOpacity(0.4),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'My Lovely App / By VASINEE 💖',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 22,
-                          color: Colors.pink,
-                        ),
-                      ),
-                    ),
-                  ),
+      initialRoute: '/', 
+      getPages: [
+        GetPage(name: '/', page: () => const HomePage()),
+        GetPage(name: '/gallery', page: () => const GalleryPage()),
+        GetPage(name: '/product', page: () => const ProductPage()),
+      ],
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+  late AnimationController _btnController;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _btnController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+      lowerBound: 0.95,
+      upperBound: 1.0,
+    );
+    _scaleAnimation = CurvedAnimation(
+      parent: _btnController,
+      curve: Curves.easeOutBack,
+    );
+    _btnController.forward();
+  }
+
+  @override
+  void dispose() {
+    _btnController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildCuteButton({
+    required VoidCallback onTap,
+    required IconData icon,
+    required String label,
+    required Color bgColor,
+    required Color iconColor,
+  }) {
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: GestureDetector(
+        onTapDown: (_) => _btnController.reverse(),
+        onTapUp: (_) {
+          _btnController.forward();
+          onTap();
+        },
+        onTapCancel: () => _btnController.forward(),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: bgColor.withOpacity(0.6),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+              ),
+            ],
+            gradient: LinearGradient(
+              colors: [
+                bgColor.withOpacity(0.9),
+                bgColor,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 28, color: iconColor),
+              const SizedBox(width: 12),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: iconColor,
+                  shadows: [
+                    Shadow(
+                      color: Colors.white.withOpacity(0.8),
+                      offset: const Offset(0, 1),
+                      blurRadius: 2,
+                    )
+                  ],
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // ใช้ AppBar แบบโปร่งแสงไล่โทนสีชมพูหวาน ๆ
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(90),
+        child: AppBar(
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.pink.shade200.withOpacity(0.9),
+                  Colors.pinkAccent.shade100.withOpacity(0.8),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.pink.shade300.withOpacity(0.6),
+                  blurRadius: 15,
+                  offset: const Offset(0, 7),
+                ),
+              ],
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(30),
+              ),
             ),
-
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 🌸 Header Box
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFFFEB2CF), Color(0xFFFFB6C1)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(25),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.pink.withOpacity(0.3),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: const Row(
-                        children: [
-                          Icon(
-                            Icons.photo_library_outlined,
-                            color: Colors.white,
-                            size: 28,
-                          ),
-                          SizedBox(width: 15),
-                          Text(
-                            "แกลเลอรี่สุดคิวท์ 💕",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 25),
-
-                    // 🖼 Gallery Grid
-                    SizedBox(
-                      height: 400,
-                      child: GridView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
-                              childAspectRatio: 0.8,
-                            ),
-                        itemCount: imageList.length,
-                        itemBuilder: (context, index) {
-                          return Hero(
-                            tag: 'image_$index',
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.pink.shade100.withOpacity(
-                                      0.2,
-                                    ),
-                                    blurRadius: 15,
-                                    offset: const Offset(0, 8),
-                                  ),
-                                ],
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(25),
-                                child: Stack(
-                                  fit: StackFit.expand,
-                                  children: [
-                                    Image.asset(
-                                      imageList[index],
-                                      fit: BoxFit.cover,
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: [
-                                            Colors.transparent,
-                                            Colors.pink.withOpacity(0.2),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      bottom: 12,
-                                      right: 12,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 5,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.9),
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          'รูปที่ ${index + 1}',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13,
-                                            color: Colors.pink,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-
-                    const SizedBox(height: 30),
-
-                    // 📋 List Header
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFFFFD3E2), Color(0xFFFFA6C1)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(25),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.pinkAccent.withOpacity(0.3),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: const Row(
-                        children: [
-                          Icon(
-                            Icons.list_alt_rounded,
-                            color: Colors.white,
-                            size: 28,
-                          ),
-                          SizedBox(width: 15),
-                          Text(
-                            "รายการน่ารัก ๆ 📝",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // 📌 ListView
-                    SizedBox(
-                      height: 500,
-                      child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: 10,
-                        itemBuilder: (context, index) {
-                          final color = Colors.pink.shade100;
-                          final iconColor = Colors.pink;
-
-                          return AnimatedContainer(
-                            duration: Duration(milliseconds: 300 + index * 80),
-                            margin: const EdgeInsets.only(bottom: 16),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Colors.pink.shade50),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.pink.withOpacity(0.05),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.all(16),
-                              leading: CircleAvatar(
-                                radius: 28,
-                                backgroundColor: color,
-                                child: Icon(
-                                  Icons.favorite_rounded,
-                                  size: 28,
-                                  color: iconColor,
-                                ),
-                              ),
-                              title: Text(
-                                "ชื่อรายการที่ ${index + 1}",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.pink,
-                                ),
-                              ),
-                              subtitle: Text(
-                                "รายละเอียดน่ารัก ๆ 💗",
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 13,
-                                ),
-                              ),
-                              trailing: const Icon(
-                                Icons.chevron_right_rounded,
-                                color: Colors.grey,
-                              ),
-                              onTap: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      "คุณเลือก: รายการที่ ${index + 1}",
-                                    ),
-                                    backgroundColor: Colors.pinkAccent,
-                                    behavior: SnackBarBehavior.floating,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      ),
+          ),
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Text(
+                'My Lovely App',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.5,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      offset: Offset(0, 2),
+                      blurRadius: 3,
+                      color: Colors.pinkAccent,
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+              SizedBox(width: 8),
+              Icon(
+                Icons.favorite,
+                color: Colors.white,
+                size: 32,
+                shadows: [
+                  Shadow(
+                    offset: Offset(0, 2),
+                    blurRadius: 4,
+                    color: Colors.pinkAccent,
+                  )
+                ],
+              ),
+            ],
+          ),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFFFF0F5), Color(0xFFFFC1D9)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildCuteButton(
+                onTap: () => Get.toNamed('/gallery'),
+                icon: Icons.image_outlined,
+                label: "ไปยังแกลเลอรี่ 🖼️",
+                bgColor: Colors.pinkAccent,
+                iconColor: Colors.white,
+              ),
+              const SizedBox(height: 28),
+              _buildCuteButton(
+                onTap: () => Get.toNamed('/product'),
+                icon: Icons.list_alt_rounded,
+                label: "ไปยังรายการสินค้า 📋",
+                bgColor: Colors.pink.shade400,
+                iconColor: Colors.white,
+              ),
+            ],
+          ),
         ),
       ),
     );
