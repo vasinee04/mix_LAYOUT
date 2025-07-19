@@ -1,231 +1,131 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'gallery.dart';
 import 'product.dart';
 
-void main() => runApp(const MainApp());
+void main() {
+  runApp(MyApp());
+}
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
+    return MaterialApp(
       title: 'My Vasinee App 💖',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFFFF0F5),
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.pink,
-        ).copyWith(secondary: Colors.pinkAccent),
-        fontFamily: 'ComicSans', // ถ้ามีฟอนต์น่ารัก เพิ่มได้ที่นี่
-      ),
-      initialRoute: '/', 
-      getPages: [
-        GetPage(name: '/', page: () => const HomePage()),
-        GetPage(name: '/gallery', page: () => const GalleryPage()),
-        GetPage(name: '/product', page: () => const ProductPage()),
-      ],
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-  late AnimationController _btnController;
-  late Animation<double> _scaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _btnController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-      lowerBound: 0.95,
-      upperBound: 1.0,
-    );
-    _scaleAnimation = CurvedAnimation(
-      parent: _btnController,
-      curve: Curves.easeOutBack,
-    );
-    _btnController.forward();
-  }
-
-  @override
-  void dispose() {
-    _btnController.dispose();
-    super.dispose();
-  }
-
-  Widget _buildCuteButton({
-    required VoidCallback onTap,
-    required IconData icon,
-    required String label,
-    required Color bgColor,
-    required Color iconColor,
-  }) {
-    return ScaleTransition(
-      scale: _scaleAnimation,
-      child: GestureDetector(
-        onTapDown: (_) => _btnController.reverse(),
-        onTapUp: (_) {
-          _btnController.forward();
-          onTap();
-        },
-        onTapCancel: () => _btnController.forward(),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: bgColor.withOpacity(0.6),
-                blurRadius: 12,
-                offset: const Offset(0, 6),
-              ),
-            ],
-            gradient: LinearGradient(
-              colors: [
-                bgColor.withOpacity(0.9),
-                bgColor,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 28, color: iconColor),
-              const SizedBox(width: 12),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: iconColor,
-                  shadows: [
-                    Shadow(
-                      color: Colors.white.withOpacity(0.8),
-                      offset: const Offset(0, 1),
-                      blurRadius: 2,
-                    )
-                  ],
-                ),
-              ),
-            ],
+        brightness: Brightness.light,
+        primaryColor: Colors.pink[300],
+        scaffoldBackgroundColor: Colors.pink[50],
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.pink[300],
+          foregroundColor: Colors.white,
+        ),
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(color: Colors.pink[900]),
+          bodyMedium: TextStyle(color: Colors.pink[800]),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.pinkAccent,
+            foregroundColor: Colors.white,
+            shape: StadiumBorder(),
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),
       ),
+      home: HomePage(),
     );
   }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // ใช้ AppBar แบบโปร่งแสงไล่โทนสีชมพูหวาน ๆ
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(90),
-        child: AppBar(
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.pink.shade200.withOpacity(0.9),
-                  Colors.pinkAccent.shade100.withOpacity(0.8),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.pink.shade300.withOpacity(0.6),
-                  blurRadius: 15,
-                  offset: const Offset(0, 7),
-                ),
-              ],
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(30),
+      appBar: AppBar(title: Text('My VAsinee App 🌸💖')),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(color: Colors.pinkAccent),
+              child: Text(
+                'Menu',
+                style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
-          ),
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Text(
-                'My Lovely App',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 1.5,
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(
-                      offset: Offset(0, 2),
-                      blurRadius: 3,
-                      color: Colors.pinkAccent,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(width: 8),
-              Icon(
-                Icons.favorite,
-                color: Colors.white,
-                size: 32,
-                shadows: [
-                  Shadow(
-                    offset: Offset(0, 2),
-                    blurRadius: 4,
-                    color: Colors.pinkAccent,
-                  )
-                ],
-              ),
-            ],
-          ),
-          centerTitle: true,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
+            ListTile(
+              leading: Icon(Icons.home, color: Colors.pink),
+              title: const Text('หน้าแรก 💖'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.image, color: Colors.pink),
+              title: const Text('แกลเลอรี่ 💖'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => GalleryPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.list, color: Colors.pink),
+              title: const Text('รายการสินค้า 💖'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProductPage()),
+                );
+              },
+            ),
+          ],
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFFFF0F5), Color(0xFFFFC1D9)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildCuteButton(
-                onTap: () => Get.toNamed('/gallery'),
-                icon: Icons.image_outlined,
-                label: "ไปยังแกลเลอรี่ 🖼️",
-                bgColor: Colors.pinkAccent,
-                iconColor: Colors.white,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'My Vasinee App',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.pink[800],
               ),
-              const SizedBox(height: 28),
-              _buildCuteButton(
-                onTap: () => Get.toNamed('/product'),
-                icon: Icons.list_alt_rounded,
-                label: "ไปยังรายการสินค้า 📋",
-                bgColor: Colors.pink.shade400,
-                iconColor: Colors.white,
-              ),
-            ],
-          ),
+            ),
+            SizedBox(height: 40),
+            ElevatedButton.icon(
+              icon: Icon(Icons.image),
+              label: Text('ไปยังแกลเลอรี่ 💖'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => GalleryPage()),
+                );
+              },
+            ),
+            SizedBox(height: 20),
+            ElevatedButton.icon(
+              icon: Icon(Icons.list),
+              label: Text('ไปยังรายการสินค้า 💖'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProductPage()),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

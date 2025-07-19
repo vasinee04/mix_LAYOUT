@@ -18,10 +18,10 @@ class GalleryPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gallery by Vasinee 💖'),
-        backgroundColor: Colors.pink,
+        title: const Text('แกลเลอรี่'),
+        backgroundColor: Colors.pink[300],
       ),
-      backgroundColor: const Color.fromARGB(255, 255, 205, 222),
+      backgroundColor: Colors.pink[50],
       body: Stack(
         children: [
           GridView.builder(
@@ -39,33 +39,32 @@ class GalleryPage extends StatelessWidget {
               );
             },
           ),
-
-          // ปุ่ม Back กว้างเต็มจอ อยู่ชิดล่างสุด มี margin ซ้าย-ขวาเล็กน้อย
           Positioned(
-            bottom: 0,
+            bottom: 20,
             left: 0,
             right: 0,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: SizedBox(
-                width: double.infinity,
-                height: 50, // กำหนดความสูงปุ่ม
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white70,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
+            child: Center(
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.pinkAccent,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                  icon: const Icon(Icons.arrow_back, color: Colors.black),
-                  label: const Text(
-                    'กดย้อนกลับ',
-                    style: TextStyle(color: Colors.black),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
                   ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                icon: const Icon(Icons.arrow_back),
+                label: const Text('ย้อนกลับ'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
             ),
           ),
